@@ -1,4 +1,4 @@
-*About
+# About
 Website for bookkeeping
-**Members
+## Members
 Yerasyl Baymukhan, Nurshat Kazimov

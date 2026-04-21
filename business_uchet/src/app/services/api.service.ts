@@ -45,7 +45,17 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
-  deleteCompany(id: number): Observable<void> {
+  getCompany(id: number): Observable<Company> {
+    return this.http.get<Company>(`${this.base}/companies/${id}/`)
+    .pipe(catchError(this.handleError));
+  }
+
+  updateCompany(id: number, data: Company): Observable<Company> {
+    return this.http.put<Company>(`${this.base}/companies/${id}/`, data)
+    .pipe(catchError(this.handleError));
+  }
+
+  deleteCompany(id: number): Observable<any> {
     return this.http.delete<void>(`${this.base}/companies/${id}/`)
       .pipe(catchError(this.handleError));
   }
@@ -54,7 +64,7 @@ export class ApiService {
     let params = new HttpParams();
     if (search) params = params.set('search', search);
     return this.http.get<Employee[]>(`${this.base}/employees/`, { params })
-      .pipe(catchError(this.handleError));
+    .pipe(catchError(this.handleError));
   }
 
   createEmployee(data: Employee): Observable<Employee> {
@@ -62,7 +72,17 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
-  deleteEmployee(id: number): Observable<void> {
+  getEmployee(id: number): Observable<Employee> {
+    return this.http.get<Employee>(`${this.base}/employees/${id}/`)
+    .pipe(catchError(this.handleError));
+  }
+
+  updateEmployee(id: number, data: Employee): Observable<Employee> {
+    return this.http.put<Employee>(`${this.base}/employees/${id}/`, data)
+    .pipe(catchError(this.handleError));
+  }
+
+  deleteEmployee(id: number): Observable<any> {
     return this.http.delete<void>(`${this.base}/employees/${id}/`)
       .pipe(catchError(this.handleError));
   }

@@ -77,9 +77,16 @@ class EmployeeList(APIView):
 
     def post(self, request, format=None):
         serializer = EmployeeSerializer(data=request.data)
+
         if serializer.is_valid():
+            company = serializer.validated_data['company']
+
+            if company.owner != request.user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class EmployeeDetail(APIView):

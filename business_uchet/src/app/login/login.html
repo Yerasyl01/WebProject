@@ -1,0 +1,25 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">📊</div>
+    <h2>Business Учёт.kz</h2>
+    <p class="subtitle">Войдите в систему</p>
+
+    @if (errorMsg) {
+      <div class="error-box">⚠️ {{ errorMsg }}</div>
+    }
+
+    <div class="form-group">
+      <label>Логин</label>
+      <input type="text" [(ngModel)]="username" placeholder="Введите логин" class="input" />
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" [(ngModel)]="password" placeholder="Введите пароль" class="input"
+        (keyup.enter)="onLogin()" />
+    </div>
+
+    <button class="btn-primary" (click)="onLogin()" [disabled]="loading">
+      {{ loading ? 'Загрузка...' : 'Войти' }}
+    </button>
+  </div>
+</div>

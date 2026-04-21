@@ -1,0 +1,41 @@
+<div class="page">
+  <div class="page-header">
+    <h1>📞 Контакты</h1>
+    <p>Оставьте заявку — перезвоним в течение часа</p>
+  </div>
+
+  <div class="layout">
+    <div class="form-card">
+      @if (successMsg) { <div class="msg success">{{ successMsg }}</div> }
+      @if (errorMsg)   { <div class="msg error">⚠️ {{ errorMsg }}</div> }
+
+      <div class="form-group">
+        <label>Имя *</label>
+        <input class="input" [(ngModel)]="name" placeholder="Ваше имя" />
+      </div>
+      <div class="form-group">
+        <label>Телефон *</label>
+        <input class="input" type="tel" [(ngModel)]="phone" placeholder="+7 (___) ___-__-__" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input class="input" type="email" [(ngModel)]="email" placeholder="example@mail.com" />
+      </div>
+      <div class="form-group">
+        <label>Сообщение</label>
+        <textarea class="input" [(ngModel)]="message" rows="4" placeholder="Опишите вашу задачу..."></textarea>
+      </div>
+      <button class="btn-blue" (click)="onSubmit()" [disabled]="loading">
+        {{ loading ? 'Отправка...' : 'Отправить заявку' }}
+      </button>
+    </div>
+
+    <div class="info-card">
+      <h3>Наши контакты</h3>
+      <div class="info-row">📍 г. Алматы, ул. Абая 10</div>
+      <div class="info-row">📞 +7 (727) 000-00-00</div>
+      <div class="info-row">✉️ info&#64;business-uchet.kz</div>
+      <div class="info-row">🕐 Пн–Пт: 9:00–18:00</div>
+    </div>
+  </div>
+</div>

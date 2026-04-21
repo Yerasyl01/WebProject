@@ -1,0 +1,41 @@
+<div class="page">
+  <h1 class="page-title">📊 Аналитика</h1>
+
+  @if (errorMsg) { <div class="msg error">⚠️ {{ errorMsg }}</div> }
+  @if (loading)  { <div class="loading">Загрузка данных...</div> }
+
+  @if (!loading) {
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">{{ companies.length }}</div>
+        <div class="stat-label">Компаний</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ totalEmployees }}</div>
+        <div class="stat-label">Сотрудников</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ avgSalary | number }} ₸</div>
+        <div class="stat-label">Средняя зарплата</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ maxSalary | number }} ₸</div>
+        <div class="stat-label">Максимальная зарплата</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Список компаний</h2>
+    @if (companies.length === 0) {
+      <div class="empty">Нет данных. Добавьте компании в разделе Бухгалтерия.</div>
+    }
+    <div class="company-list">
+      @for (c of companies; track c.id) {
+        <div class="company-row">
+          <span class="company-icon">🏢</span>
+          <span class="company-name">{{ c.name }}</span>
+          <span class="company-id">ID: {{ c.id }}</span>
+        </div>
+      }
+    </div>
+  }
+</div>

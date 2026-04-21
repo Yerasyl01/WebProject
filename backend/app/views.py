@@ -1,14 +1,17 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from rest_framework import status, filters
-from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
+from rest_framework import status, filters, generics, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from app.models import Company, Employee
-from app.serializers import CompanySerializer, EmployeeSerializer
+from app.serializers import CompanySerializer, EmployeeSerializer, UserSerializer
+from app.permissions import IsOwnerOrReadOnly, IsCompanyOwner, IsCompanyOwnerOrReadOnly
 
 # Create your views here.
 @api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def companies_list(request, format=None):
     """
     List all companies, or create a new company.
@@ -28,11 +31,12 @@ def companies_list(request, format=None):
     elif request.method == 'POST':
         serializer = CompanySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly])
 def companies_detail(request, pk, format=None):
     """
     Retrieve, update or delete a company
@@ -58,6 +62,7 @@ class EmployeeList(APIView):
     """
     List all employees, lookup for employee, or create a new one
     """
+    permission_classes = [IsCompanyOwnerOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['surname', 'name', 'patronymic']
 
@@ -81,6 +86,8 @@ class EmployeeDetail(APIView):
     """
     Retrieve, udpate or delete an employee instance
     """
+    permission_classes = [IsCompanyOwner]
+
     def get_object(self, pk):
         return get_object_or_404(Employee, pk=pk)
 
@@ -101,3 +108,11 @@ class EmployeeDetail(APIView):
         employee = self.get_object(pk)
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

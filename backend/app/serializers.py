@@ -1,10 +1,12 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import Taxation, Bookeeper, Company, Employee
 
 class TaxationSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=50)
     description = serializers.CharField()
+    companies = serializers.PrimaryKeyRelatedField(many=True, queryset=Company.objects.all())
 
     def create(self, validated_data):
         """
@@ -26,6 +28,7 @@ class BookeeperSerializer(serializers.Serializer):
     surname = serializers.CharField(max_length=50)
     name = serializers.CharField(max_length=50)
     patronymic = serializers.CharField(max_length=50)
+    companies = serializers.PrimaryKeyRelatedField(many=True, queryset=Company.objects.all())
 
     def create(self, validated_data):
         """
@@ -44,11 +47,21 @@ class BookeeperSerializer(serializers.Serializer):
         return instance
 
 class CompanySerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source="owner.username")
+    employees = serializers.PrimaryKeyRelatedField(many=True, queryset=Employee.objects.all())
+
     class Meta:
         model = Company
-        fields = ['id', 'name', 'registration', 'taxation', 'bookeeper']
+        fields = ['id', 'name', 'registration', 'taxation', 'bookeeper', 'owner', 'employees']
 
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
+
+class UserSerializer(serializers.ModelSerializer):
+    companies = serializers.PrimaryKeyRelatedField(many=True, queryset=Company.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'companies']

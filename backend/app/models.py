@@ -21,6 +21,7 @@ class Company(models.Model):
     registration = models.DateField(auto_now_add=True)
     taxation = models.ForeignKey(Taxation, on_delete=models.SET_NULL, null=True)
     bookeeper = models.ForeignKey(Bookeeper, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey("auth.User", related_name="companies", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -29,7 +30,7 @@ class Employee(models.Model):
     surname = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     patronymic = models.CharField(max_length=50)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, related_name="employees", on_delete=models.CASCADE)
     salary = models.IntegerField()
 
     def __str__(self):
